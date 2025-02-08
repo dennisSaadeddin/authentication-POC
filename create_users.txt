@@ -1,0 +1,30 @@
+# Create user 1: John Doe
+curl -X POST "http://localhost:8000/api/signup" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "john_doe", "password": "password123"}'
+
+# Create user 2: Alice Smith
+curl -X POST "http://localhost:8000/api/signup" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "alice_smith", "password": "securepass456"}'
+
+# Create user 3: Bob Wilson
+curl -X POST "http://localhost:8000/api/signup" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "bob_wilson", "password": "pass789!"}'
+
+# Create user 4: Emma Brown
+curl -X POST "http://localhost:8000/api/signup" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "emma_brown", "password": "emma2024"}'
+
+# Create user 5: Mike Jones
+curl -X POST "http://localhost:8000/api/signup" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "mike_jones", "password": "mikepass!"}'
+
+# Note: To format the response as pretty JSON, add "| python3 -m json.tool" at the end of each command
+# Example:
+# curl -X POST "http://localhost:8000/api/signup" \
+#   -H "Content-Type: application/json" \
+#   -d '{"username": "test_user", "password": "test123"}' | python3 -m json.tool 
