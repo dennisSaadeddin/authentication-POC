@@ -213,10 +213,6 @@ For production deployment:
 4. Push to the branch
 5. Create a Pull Request
 
-## License
-
-MIT License - see LICENSE file for details
-
 ## Docker Deployment
 
 ### Prerequisites
@@ -281,3 +277,7 @@ docker-compose down
 - Ensure Docker and Docker Compose are installed
 - Check container logs with `docker-compose logs`
 - Verify network ports are not in use 
+
+## License
+
+MIT License - see LICENSE file for details
