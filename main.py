@@ -2,11 +2,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from contextlib import asynccontextmanager
 
 # Import application components
 from app.api.auth import router as auth_router
 from app.db.base import Base
 from app.db.session import engine
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup event
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    # Shutdown event (optional)
+    # Add any cleanup logic here
 
 # Initialize FastAPI application with metadata
 app = FastAPI(
@@ -15,6 +25,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",  # URL for Swagger UI documentation
     redoc_url="/redoc",  # URL for ReDoc documentation
+    lifespan=lifespan
 )
 
 # Configure CORS (Cross-Origin Resource Sharing)
@@ -39,16 +50,6 @@ async def root():
     Returns a simple message directing to documentation.
     """
     return {"message": "Authentication API is running. Visit /docs for API documentation."}
-
-# Database initialization event
-@app.on_event("startup")
-async def init_db():
-    """
-    Runs on application startup.
-    Creates all database tables if they don't exist.
-    """
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
 
 # Run the application using uvicorn if script is run directly
 if __name__ == "__main__":

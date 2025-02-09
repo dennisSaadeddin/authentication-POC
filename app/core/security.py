@@ -1,5 +1,5 @@
 # Standard library imports for datetime handling
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 
 # Security related imports
@@ -61,9 +61,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     
     # Set expiration time
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     
     # Add expiration claim to payload
     to_encode.update({"exp": expire})
