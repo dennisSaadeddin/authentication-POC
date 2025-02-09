@@ -16,6 +16,7 @@ from app.core.config import get_settings
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.auth import UserCreate, Token, User as UserSchema, LoginResponse
+from app.api.deps import get_current_user
 
 # Initialize router and settings
 router = APIRouter()
@@ -72,6 +73,7 @@ async def login(
     
     Returns:
         JWT token and success message
+        Token is valid for 24 hours from creation
     
     Raises:
         HTTPException: If credentials are invalid or user doesn't exist
@@ -95,16 +97,33 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Generate access token with configured expiration
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    # Generate access token with 24-hour expiration
+    access_token_expires = timedelta(hours=24)
     access_token = create_access_token(
-        data={"sub": user.username},  # Subject claim in JWT
+        data={"sub": user.username},
         expires_delta=access_token_expires
     )
     
-    # Return token with success message
     return {
         "access_token": access_token,
         "token_type": "bearer",
         "message": "Successfully logged in!"
-    } 
+    }
+
+@router.get("/protected", response_model=UserSchema, tags=["authentication"])
+async def protected_route(
+    current_user: User = Depends(get_current_user)
+) -> Any:
+    """
+    Protected endpoint that requires a valid Bearer token.
+    
+    Args:
+        current_user: User object from the validated Bearer token
+        
+    Returns:
+        Current authenticated user's information
+        
+    Raises:
+        HTTPException: If Bearer token is invalid or expired
+    """
+    return current_user 

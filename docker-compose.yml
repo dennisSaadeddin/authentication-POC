@@ -1,0 +1,36 @@
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/auth.db
+    restart: unless-stopped
+
+  # Optional: Add a database migration service if needed
+  migrate:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: alembic upgrade head
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+    depends_on:
+      - api
+
+  # Optional: Add a test service
+  test:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: pytest
+    volumes:
+      - ./:/app
+    depends_on:
+      - api 

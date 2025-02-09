@@ -215,4 +215,69 @@ For production deployment:
 
 ## License
 
-MIT License - see LICENSE file for details 
+MIT License - see LICENSE file for details
+
+## Docker Deployment
+
+### Prerequisites
+- Docker
+- Docker Compose
+
+### Building and Running the Application
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/authentication-poc.git
+   cd authentication-poc
+   ```
+
+2. Build and start the application:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. The API will be available at:
+   - Main API: http://localhost:8000
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc: http://localhost:8000/redoc
+
+### Docker Services
+
+- **api**: The main FastAPI application
+- **migrate**: Runs database migrations
+- **test**: Runs test suite (optional)
+
+### Environment Configuration
+
+- The `.env` file is automatically generated during Docker build
+- You can customize environment variables in the Dockerfile or docker-compose.yml
+
+### Persistent Data
+
+- Database files are stored in the `./data` directory
+- Volumes are mapped to preserve data between container restarts
+
+### Running Tests
+
+```bash
+docker-compose run test
+```
+
+### Stopping the Application
+
+```bash
+docker-compose down
+```
+
+### Production Considerations
+
+- Replace the generated SECRET_KEY with a secure, persistent key
+- Configure CORS settings in `main.py`
+- Consider using a production-grade database
+- Set up proper logging and monitoring
+
+### Troubleshooting
+
+- Ensure Docker and Docker Compose are installed
+- Check container logs with `docker-compose logs`
+- Verify network ports are not in use 
